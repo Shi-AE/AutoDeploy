@@ -1,0 +1,13 @@
+[ ACMMS ]
+
+# 校验密码
+password = guatdev
+
+# 指定分支
+branch = develop
+
+# 部署目录
+deploy.dir = /usr/serverApp/ACMMS/backend
+
+# 子模块目录（如果存在）
+module = ruoyi-admin
