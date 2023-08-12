@@ -93,18 +93,17 @@ public class HookController {
         String existProject = ShellUtil.execForStr(cmd);
 
         if (existProject.equals("true")) {
-            // 项目已克隆执行拉取
-            cmd = "cd " + deployPath + "/" + name + " && git pull origin " + branch;
-            log.info("项目已存在执行拉取：{}", cmd);
+            // 删除项目文件，为重新克隆最准备
+            cmd = "rm -rf " + deployPath + "/" + name;
+            log.info("删除项目文件，为重新克隆最准备：{}", cmd);
             ShellUtil.execForStr(cmd);
-
-        } else {
-            // 项目未克隆执行克隆
-            cmd = "cd " + deployPath + " && git clone -b " + branch + " " + cloneUrl;
-            log.info("项目未克隆执行克隆：{}", cmd);
-            ShellUtil.execForStr(cmd);
-
         }
+
+        // 项目未克隆执行克隆
+        cmd = "cd " + deployPath + " && git clone -b " + branch + " " + cloneUrl;
+        log.info("项目未克隆执行克隆：{}", cmd);
+        ShellUtil.execForStr(cmd);
+
 
         // 构建项目
         cmd = "cd " + deployPath + "/" + name + " && mvn clean package -Dmaven.test.skip=true";
