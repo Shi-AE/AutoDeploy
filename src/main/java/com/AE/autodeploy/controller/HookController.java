@@ -2,6 +2,7 @@ package com.AE.autodeploy.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
+import com.AE.autodeploy.utils.DebounceUtil;
 import com.AE.autodeploy.utils.ShellUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,6 +86,12 @@ public class HookController {
         }
         log.info("分支验证通过");
 
+        // 开始执行任务
+        if (!DebounceUtil.addTask(name)) {
+            log.info("{} 任务重复请求，已防止抖动", name);
+            return "error";
+        }
+
         // 初始化完成开始执行脚本
         String cmd;
 
@@ -151,6 +158,9 @@ public class HookController {
         cmd = "nohup java -jar " + deployPath + "/" + name + "/" + module + "/target/" + packageName + " &> " + deployPath + "/" + name + ".log &";
         log.info("启动新项目：{}", cmd);
         ShellUtil.execForStr(cmd);
+
+        // 结束任务
+        DebounceUtil.endTask(name);
 
         return "success";
     }
