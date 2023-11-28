@@ -155,7 +155,7 @@ public class HookController {
         }
 
         // 启动新项目
-        cmd = "nohup java -jar " + deployPath + "/" + name + "/" + module + "/target/" + packageName + " &> " + deployPath + "/" + name + ".log &";
+        cmd = "nohup java -jar " + deployPath + "/" + name + "/" + module + "/target/" + packageName + " &>> " + deployPath + "/" + name + ".log &";
         log.info("启动新项目：{}", cmd);
         ShellUtil.execForStr(cmd);
 
