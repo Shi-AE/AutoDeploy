@@ -5,6 +5,7 @@ import cn.hutool.setting.Setting;
 import com.AE.autodeploy.utils.DebounceUtil;
 import com.AE.autodeploy.utils.ShellUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,6 +94,13 @@ public class HookController {
         }
 
         // 初始化完成开始执行脚本
+        deploy(deployPath, name, branch, cloneUrl, module);
+
+        return "success";
+    }
+
+    @Async
+    public void deploy(String deployPath, String name, String branch, String cloneUrl, String module) {
         String cmd;
 
         cmd = "[ -d " + deployPath + "/" + name + " ] && echo true || echo false";
@@ -161,7 +169,5 @@ public class HookController {
 
         // 结束任务
         DebounceUtil.endTask(name);
-
-        return "success";
     }
 }
