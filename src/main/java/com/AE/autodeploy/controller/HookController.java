@@ -94,12 +94,13 @@ public class HookController {
         }
 
         // 初始化完成开始执行脚本
-        deploy(deployPath, name, branch, cloneUrl, module);
+        String finalModule = module;
+        Thread thread = new Thread(() -> deploy(deployPath, name, branch, cloneUrl, finalModule));
+        thread.start();
 
         return "success";
     }
 
-    @Async
     public void deploy(String deployPath, String name, String branch, String cloneUrl, String module) {
         String cmd;
 
